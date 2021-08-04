@@ -1,5 +1,5 @@
-import { stringify } from "querystring";
 import axios from "axios";
+import { URLSearchParams } from "url";
 import sM from "./sM";
 import { isSupported, getCode } from "./languages";
 interface TranslateOptions {
@@ -58,24 +58,23 @@ export function translate(
 
   return token(text)
     .then((token: Token) => {
-      const url =
-        "https://translate.google." + opts.tld + "/translate_a/single";
-      const data = {
+      const url = `https://translate.google.${opts.tld}/translate_a/single`;
+      const data = new URLSearchParams({
         client: "gtx",
-        sl: getCode(opts.from),
-        tl: getCode(opts.to),
-        hl: getCode(opts.hl),
+        sl: getCode(opts.from).toString(),
+        tl: getCode(opts.to).toString(),
+        hl: getCode(opts.hl).toString(),
         dt: ["at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"],
         ie: "UTF-8",
         oe: "UTF-8",
-        otf: 1,
-        ssel: 0,
-        tsel: 0,
-        kc: 7,
+        otf: "1",
+        ssel: "0",
+        tsel: "0",
+        kc: "7",
         q: text,
         [token.name]: token.value
-      };
-      var fullUrl = url + "?" + stringify(data);
+      });
+      var fullUrl = url + "?" + data.toString();
       /*
         if (fullUrl.length > 2083) {
             delete data.q;
