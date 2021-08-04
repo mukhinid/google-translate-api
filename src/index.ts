@@ -57,28 +57,33 @@ export function translate(
 
   return token(text)
     .then((token: Token) => {
-      const url = `https://translate.google.${opts.tld}/translate_a/single`;
-      const dtParams = new URLSearchParams(["at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"].map(s => ["dt", s]));
-      const dataParams = new URLSearchParams({
-        client: "gtx",
-        sl: getCode(opts.from).toString(),
-        tl: getCode(opts.to).toString(),
-        hl: getCode(opts.hl).toString(),
-        ie: "UTF-8",
-        oe: "UTF-8",
-        otf: "1",
-        ssel: "0",
-        tsel: "0",
-        kc: "7",
-        q: text,
-        [token.name]: token.value,
-      });
-      const params = new URLSearchParams({
-        ...Object.fromEntries(dtParams),
-        ...Object.fromEntries(dataParams),
-      });
-      var fullUrl = `${url}?${params}`;
-      return fullUrl;
+      const url = new URL(`https://translate.google.${opts.tld}/translate_a/single`);
+      url.searchParams.append('client', 'gtx');
+      url.searchParams.append('sl', getCode(opts.from).toString());
+      url.searchParams.append('tl', getCode(opts.to).toString());
+      url.searchParams.append('hl', getCode(opts.hl).toString());
+
+      url.searchParams.append('dt', 'at');
+      url.searchParams.append('dt', 'bd');
+      url.searchParams.append('dt', 'ex');
+      url.searchParams.append('dt', 'ld');
+      url.searchParams.append('dt', 'md');
+      url.searchParams.append('dt', 'qca');
+      url.searchParams.append('dt', 'rw');
+      url.searchParams.append('dt', 'rm');
+      url.searchParams.append('dt', 'ss');
+      url.searchParams.append('dt', 't');
+      
+      url.searchParams.append('ie', 'UTF-8');
+      url.searchParams.append('oe', 'UTF-8');
+      url.searchParams.append('otf', '1');
+
+      url.searchParams.append('ssel', '0');
+      url.searchParams.append('tsel', '0');
+      url.searchParams.append('kc', '7');
+      url.searchParams.append('q', text);
+      url.searchParams.append(token.name, token.value);
+      return url.toString();
     })
     .then(url => {
       return axios
