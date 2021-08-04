@@ -3,13 +3,13 @@ Based on [google-translate-api](https://github.com/matheuss/google-translate-api
 ## Install
 
 ```bash
-npm install google-translate-api-browser
+npm install @mukhinid/google-translate-api
 ```
 
 or
 
 ```bash
-yarn add google-translate-api-browser
+yarn add @mukhinid/google-translate-api
 ```
 
 For cross origin requests it uses [cors-anywhere
@@ -20,7 +20,7 @@ For cross origin requests it uses [cors-anywhere
 For browser
 
 ```javascript
-import { setCORS } from "google-translate-api-browser";
+import { setCORS } from "@mukhinid/google-translate-api";
 // setting up cors-anywhere server address
 const translate = setCORS("http://cors-anywhere.herokuapp.com/");
 /*
@@ -42,7 +42,7 @@ translate("Je ne mangé pas six jours", { to: "en" })
 For node
 
 ```javascript
-var { translate } = require("google-translate-api-browser");
+var { translate } = require("@mukhinid/google-translate-api");
 var readline = require("readline");
 
 var rl = readline.createInterface(process.stdin, process.stdout);
