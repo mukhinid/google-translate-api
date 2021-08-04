@@ -1,5 +1,4 @@
 import axios from "axios";
-import { URLSearchParams } from "url";
 import sM from "./sM";
 import { isSupported, getCode } from "./languages";
 interface TranslateOptions {
@@ -59,12 +58,12 @@ export function translate(
   return token(text)
     .then((token: Token) => {
       const url = `https://translate.google.${opts.tld}/translate_a/single`;
-      const data = new URLSearchParams({
+      const dtParams = new URLSearchParams(["at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"].map(s => ["dt", s]));
+      const dataParams = new URLSearchParams({
         client: "gtx",
         sl: getCode(opts.from).toString(),
         tl: getCode(opts.to).toString(),
         hl: getCode(opts.hl).toString(),
-        dt: ["at", "bd", "ex", "ld", "md", "qca", "rw", "rm", "ss", "t"],
         ie: "UTF-8",
         oe: "UTF-8",
         otf: "1",
@@ -72,18 +71,13 @@ export function translate(
         tsel: "0",
         kc: "7",
         q: text,
-        [token.name]: token.value
+        [token.name]: token.value,
       });
-      var fullUrl = url + "?" + data.toString();
-      /*
-        if (fullUrl.length > 2083) {
-            delete data.q;
-            return [
-                url + '?' + stringify(data),
-                {method: 'POST', body: {q: text}}
-            ];
-        }
-        */
+      const params = new URLSearchParams({
+        ...Object.fromEntries(dtParams),
+        ...Object.fromEntries(dataParams),
+      });
+      var fullUrl = `${url}?${params}`;
       return fullUrl;
     })
     .then(url => {
